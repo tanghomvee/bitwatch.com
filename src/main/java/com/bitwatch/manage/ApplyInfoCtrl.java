@@ -38,30 +38,36 @@ public class ApplyInfoCtrl extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json; charset=utf-8");
         resp.setHeader("cache-control", "no-cache");
-        String path = req.getServletPath();
-        String content = getContent(req.getInputStream());
+        String user = (String) req.getSession().getAttribute("USER");
         Msg msg = null;
-        if ("/applyInfo/add".equalsIgnoreCase(path)){
-            ApplyInfo applyInfo = JSONObject.toJavaObject(JSON.parseObject(content) , ApplyInfo.class);
-            DBUtil.save(applyInfo);
-            msg = Msg.ok();
-        }else if("/applyInfo/list".equalsIgnoreCase(path)){
-            String pageNum = req.getParameter("pageNum");
-            try{
-                Integer pages =  DBUtil.countPage();
-                List<ApplyInfo> infos = DBUtil.list(StringUtils.isEmpty(pageNum) ? 0 : Integer.valueOf(pageNum));
-                Map<String,Object> data = new HashMap<>();
-                data.put("pages" , pages);
-                data.put("data" ,infos);
+        if (StringUtils.isEmpty(user)){
+            msg = Msg.err("请登录系统");
+        }else{
 
-                msg = Msg.ok(data);
-            }catch (Exception ex){
-                ex.printStackTrace();
-                msg = Msg.err();
+            String path = req.getServletPath();
+            String content = getContent(req.getInputStream());
+            if ("/applyInfo/add".equalsIgnoreCase(path)){
+                ApplyInfo applyInfo = JSONObject.toJavaObject(JSON.parseObject(content) , ApplyInfo.class);
+                DBUtil.save(applyInfo);
+                msg = Msg.ok();
+            }else if("/applyInfo/list".equalsIgnoreCase(path)){
+                String pageNum = req.getParameter("pageNum");
+                try{
+                    Integer pages =  DBUtil.countPage();
+                    List<ApplyInfo> infos = DBUtil.list(StringUtils.isEmpty(pageNum) ? 0 : Integer.valueOf(pageNum));
+                    Map<String,Object> data = new HashMap<>();
+                    data.put("pages" , pages);
+                    data.put("data" ,infos);
+
+                    msg = Msg.ok(data);
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                    msg = Msg.err();
+                }
+
+            }else {
+                msg = Msg.err("非法请求");
             }
-
-        }else {
-            msg = Msg.err("非法请求");
         }
 
         resp.getWriter().print(JSON.toJSONString(msg));
