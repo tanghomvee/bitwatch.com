@@ -4,7 +4,7 @@
 
     <groupId>com.bitwatch</groupId>
     <artifactId>bitwatch-manage</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>bitwatch  manage Webapp</name>
