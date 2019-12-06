@@ -31,6 +31,7 @@ public class UsrCtrl extends HttpServlet {
         if (!"admin".equalsIgnoreCase(usrName) || ! "bitwatch".equals(pwd)){
             msg = Msg.err("账户密码错误");
        }else {
+            msg = Msg.ok();
             req.getSession().setAttribute("USER" , usrName + "-" + pwd);
         }
 
