@@ -41,7 +41,7 @@ public class ApplyInfoCtrl extends HttpServlet {
         String user = (String) req.getSession().getAttribute("USER");
         Msg msg = null;
         if (StringUtils.isEmpty(user)){
-            msg = Msg.err("请登录系统");
+            msg = Msg.login();
         }else{
 
             String path = req.getServletPath();
@@ -53,10 +53,11 @@ public class ApplyInfoCtrl extends HttpServlet {
             }else if("/applyInfo/list".equalsIgnoreCase(path)){
                 String pageNum = req.getParameter("pageNum");
                 try{
-                    Integer pages =  DBUtil.countPage();
+                    Integer total =  DBUtil.getTotal();
                     List<ApplyInfo> infos = DBUtil.list(StringUtils.isEmpty(pageNum) ? 0 : Integer.valueOf(pageNum));
                     Map<String,Object> data = new HashMap<>();
-                    data.put("pages" , pages);
+                    data.put("pages" , DBUtil.getPage(total));
+                    data.put("total" , total);
                     data.put("data" ,infos);
 
                     msg = Msg.ok(data);

@@ -19,7 +19,7 @@ import java.util.Properties;
 public class DBUtil {
 
     private static DataSource dataSource = null;
-    private static final Integer PAGE_SIZE = 50;
+    private static final Integer PAGE_SIZE = 15;
     static {
         InputStream inputStream =  DBUtil.class.getResourceAsStream("/db.properties");
          Properties pp = new Properties();
@@ -96,7 +96,7 @@ public class DBUtil {
         }
         return data;
     }
-    public static Integer countPage() throws SQLException {
+    public static Integer getTotal() throws SQLException {
 
         // 执行SQL语句
         String sql = "select  count(id) As rows from `bitwatch`.`t_apply_info` ;";
@@ -117,6 +117,10 @@ public class DBUtil {
         }finally {
             close(conn, pstmt);
         }
+        return rows;
+    }
+
+    public static Integer  getPage(Integer rows){
         return rows % PAGE_SIZE == 0 ? rows / PAGE_SIZE : (rows / PAGE_SIZE) + 1;
     }
 

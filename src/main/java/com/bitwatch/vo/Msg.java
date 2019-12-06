@@ -15,6 +15,7 @@ public class Msg implements Serializable {
 
     private static final  String  OK_CODE="OK";
     private static final  String  OK_MSG="操作成功";
+    private static final  String  LOGIN_CODE="LOGIN";
     private static final  String  ERR_CODE="err";
     private static final  String  ERR_MSG="操作失败";
     private String code;
@@ -40,6 +41,10 @@ public class Msg implements Serializable {
     }
     public  static Msg  err(){
         return err(ERR_MSG);
+    }
+    public  static Msg  login(){
+        Msg msg = new Msg(LOGIN_CODE , "请登录");
+        return msg;
     }
 
 }
