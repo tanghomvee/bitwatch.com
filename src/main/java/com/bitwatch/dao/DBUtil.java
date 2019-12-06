@@ -68,7 +68,7 @@ public class DBUtil {
 
         int startIndex = (pageNum - 1) > 0 ? (pageNum-1)* PAGE_SIZE : 0;
         // 执行SQL语句
-        String sql = "select *  from `bitwatch`.`t_apply_info` LIMIT  " + startIndex + "," + PAGE_SIZE;
+        String sql = "select *  from `bitwatch`.`t_apply_info`  order by id desc LIMIT  " + startIndex + "," + PAGE_SIZE;
         // 从连接池中取出连接
         Connection conn = null;
         PreparedStatement pstmt = null;
