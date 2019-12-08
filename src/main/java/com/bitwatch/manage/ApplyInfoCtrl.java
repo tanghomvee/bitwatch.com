@@ -38,19 +38,18 @@ public class ApplyInfoCtrl extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json; charset=utf-8");
         resp.setHeader("cache-control", "no-cache");
-        String user = (String) req.getSession().getAttribute("USER");
+        String path = req.getServletPath();
+        String content = getContent(req.getInputStream());
         Msg msg = null;
-        if (StringUtils.isEmpty(user)){
-            msg = Msg.login();
-        }else{
-
-            String path = req.getServletPath();
-            String content = getContent(req.getInputStream());
-            if ("/applyInfo/add".equalsIgnoreCase(path)){
-                ApplyInfo applyInfo = JSONObject.toJavaObject(JSON.parseObject(content) , ApplyInfo.class);
-                DBUtil.save(applyInfo);
-                msg = Msg.ok();
-            }else if("/applyInfo/list".equalsIgnoreCase(path)){
+        if ("/applyInfo/add".equalsIgnoreCase(path)){
+            ApplyInfo applyInfo = JSONObject.toJavaObject(JSON.parseObject(content) , ApplyInfo.class);
+            DBUtil.save(applyInfo);
+            msg = Msg.ok();
+        }else if("/applyInfo/list".equalsIgnoreCase(path)){
+            String user = (String) req.getSession().getAttribute("USER");
+            if (StringUtils.isEmpty(user)){
+                msg = Msg.login();
+            }else{
                 String pageNum = req.getParameter("pageNum");
                 try{
                     Integer total =  DBUtil.getTotal();
@@ -65,10 +64,10 @@ public class ApplyInfoCtrl extends HttpServlet {
                     ex.printStackTrace();
                     msg = Msg.err();
                 }
-
-            }else {
-                msg = Msg.err("非法请求");
             }
+
+        }else {
+            msg = Msg.err("非法请求");
         }
 
         resp.getWriter().print(JSON.toJSONString(msg));
